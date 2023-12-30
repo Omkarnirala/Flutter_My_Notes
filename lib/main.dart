@@ -51,10 +51,43 @@ class _NoteListScreenState extends State<NoteListScreen> {
             return const Center(child: CircularProgressIndicator());
           }
           var notes = snapshot.data;
+          if (notes!.isEmpty) {
+            // Enhanced styling for the empty list message
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children:<Widget>[
+                  Icon(
+                    Icons.note_outlined, // Icon representing notes
+                    size: 50,
+                    color: Colors.grey[600],
+                  ),
+                  const SizedBox(height: 20), // Space between icon and text
+                  Text(
+                    'The list is empty',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Start by adding a new note!',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
           return ListView.builder(
-            itemCount: notes?.length ?? 0,
+            itemCount: notes.length,
             itemBuilder: (context, index) {
-              var note = notes![index];
+              var note = notes[index];
               return Container(
                 color: index % 2 == 0 ? Colors.white : Colors.grey[200],
                 // Alternating colors
