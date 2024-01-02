@@ -56,7 +56,7 @@ class _NoteListScreenState extends State<NoteListScreen> {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children:<Widget>[
+                children: <Widget>[
                   Icon(
                     Icons.note_outlined, // Icon representing notes
                     size: 50,
@@ -104,14 +104,27 @@ class _NoteListScreenState extends State<NoteListScreen> {
                         style: const TextStyle(
                             fontWeight: FontWeight.w300, fontSize: 12),
                       ),
+                      Text(
+                        'Edited: ${DateFormat('yyyy-MM-dd – kk:mm').format(note.lastEditedAt)}',
+                        // Display the last edited time
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w300, fontSize: 12),
+                      ),
                       // Format the date as needed
                     ],
                   ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete_forever_outlined,
-                        color: Colors.red),
-                    // Set the color to red
-                    onPressed: () => _showDeleteConfirmation(context, note),
+                  trailing: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    // Align children to the end (right side)
+                    mainAxisSize: MainAxisSize.min,
+                    // Use the minimum size for the column
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.delete_forever_outlined,
+                            color: Colors.red),
+                        onPressed: () => _showDeleteConfirmation(context, note),
+                      ),
+                    ],
                   ),
                   onTap: () {
                     print("Tapped Note: ${note.title}, ${note.content}");

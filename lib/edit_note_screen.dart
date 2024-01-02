@@ -15,6 +15,7 @@ class EditNoteScreen extends StatefulWidget {
 class _EditNoteScreenState extends State<EditNoteScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
+  late bool _isPinned;
 
   final FirestoreService _firestoreService = FirestoreService();
 
@@ -24,6 +25,9 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     if (widget.note != null) {
       _titleController.text = widget.note!.title;
       _contentController.text = widget.note!.content;
+      _isPinned = widget.note!.isPinned; // Set the pin state based on the note
+    } else {
+      _isPinned = false;
     }
   }
 
@@ -33,6 +37,15 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
       appBar: AppBar(
         title: Text(widget.note == null ? 'Add Note' : 'Edit Note'),
         actions: <Widget>[
+          // Pin Icon Button - Reflects the current pin state
+          // IconButton(
+          //   icon: Icon(_isPinned ? Icons.push_pin : Icons.push_pin_outlined),
+          //   onPressed: () {
+          //     setState(() {
+          //       _isPinned = !_isPinned; // Toggle the pin state
+          //     });
+          //   },
+          // ),
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: _saveNote,
@@ -46,6 +59,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
           // Aligns children to the start of the cross axis
           children: <Widget>[
             TextField(
+              maxLength: 50,  // Set the maximum number of characters
               controller: _titleController,
               decoration: const InputDecoration(labelText: 'Title'),
             ),
@@ -57,8 +71,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
                   labelText: 'Note',
                   alignLabelWithHint: true,
                   // Aligns the label to the top when the field is empty
-                  contentPadding:
-                      EdgeInsets.only(top: 12.0), // Adjust padding as needed
+                  contentPadding: EdgeInsets.only(top: 12.0), // Adjust padding as needed
                 ),
                 maxLines: null,
                 expands: true,
@@ -95,6 +108,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
       noteToSave = Note(
         title: _titleController.text,
         content: _contentController.text,
+        lastEditedAt: DateTime.now(),
       );
     } else {
       // Update the existing note
@@ -103,8 +117,8 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
         title: _titleController.text,
         content: _contentController.text,
         isPinned: widget.note!.isPinned,
-        createdAt:
-            widget.note!.createdAt, // Preserve the original creation date
+        createdAt: widget.note!.createdAt,
+        lastEditedAt: DateTime.now(), // Preserve the original creation date
       );
     }
 

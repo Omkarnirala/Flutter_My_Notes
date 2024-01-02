@@ -6,6 +6,7 @@ class Note {
   String content;
   bool isPinned;
   DateTime createdAt;
+  DateTime lastEditedAt;
 
   Note({
     this.id = '',
@@ -13,7 +14,8 @@ class Note {
     required this.content,
     this.isPinned = false,
     DateTime? createdAt,
-  }) : createdAt = createdAt ?? DateTime.now(); // Default to current time if not provided
+    DateTime? lastEditedAt,
+  }) : createdAt = createdAt ?? DateTime.now(), lastEditedAt = lastEditedAt ?? DateTime.now(); // Default to current time if not provided
 
   factory Note.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data() as Map;
@@ -23,6 +25,7 @@ class Note {
       content: data['content'] ?? '',
       isPinned: data['isPinned'] ?? false,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
+      lastEditedAt: (data['lastEditedAt'] as Timestamp).toDate(),
     );
   }
 
@@ -32,6 +35,7 @@ class Note {
       'content': content,
       'isPinned': isPinned,
       'createdAt': createdAt,
+      'lastEditedAt': lastEditedAt,
     };
   }
 }
